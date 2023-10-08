@@ -1,4 +1,5 @@
 import sys
+import os
 
 
 
@@ -7,11 +8,8 @@ import sys
 if __name__ == "__main__":
     n = len(sys.argv)
 
-    print(n)
-
-    print('arguments passed')
     for i in range(1, n):
-        print(sys.argv[i], end = " ")
+        print(sys.argv[i])
     
     arguementList = sys.argv[1:]
 
@@ -48,19 +46,25 @@ if __name__ == "__main__":
         
     ##opening file
     try:
-        with open(file_name , "r") as file:
+        with open(file_name , "r" , encoding="utf8") as file:
             
-
             for line in file:
+                
                 line_count += 1
                 char_count += len(line)
                 words = line.split()
+                word_count += len(words)
+
+    except UnicodeDecodeError:
+        print("Couldn't decode this line")
     
     except FileNotFoundError:
         print("File not found!")
     
     except NameError:
          print("Enter valid file name.")
+
+    
 
     if(count_chars):
         print(char_count, end= " ")
@@ -69,6 +73,9 @@ if __name__ == "__main__":
         print(line_count, end= " ")
     if(count_words):
         print(word_count, end= " ")
+
+    if(count_byte):
+        print("Bytes: ", os.path.getsize(file_name) )
     
     print(file_name)
 
