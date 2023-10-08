@@ -1,0 +1,7 @@
+This challenge is to build your own command like tool to compress text files. This is a challenge I first did in 1998 when my employer didn’t have much work for me to do between projects so suggested I pick a skill and polish it.
+
+I picked C and decided to implement a few of the data structures and algorithms from my university course again in C (we did Pascal on the course). At the same time I wanted to start factoring in some of the ‘mechanical sympathy’ that I’d been reading about in Michael Abrash's excellent Graphics Programming Black Book.
+
+Despite the name the book covers a lot more than just graphics programming - it really digs into understanding the architecture of a computer and how that has an impact on the performance of your code. For example when I re-wrote of part the compression tool that this challenge is about to take into account the hard disk buffer size (back before SSDs) the performance on a one megabyte file jumped 100x!
+
+These days the equivalent would be understand the cache hierarchies in a modern CPU and how programming with an awareness of them can radically change the performance of your code. Scott Meyers did a great talk that digs into this. You can find the slides on his website here.
