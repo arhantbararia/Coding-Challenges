@@ -1,6 +1,91 @@
 import sys
 import os
 
+class HuffBaseNode():
+     
+     def isLeaf(self) -> bool:
+          pass
+     
+
+     
+     def weight(self) -> int:
+          pass
+     
+     
+class HuffLeafNode(HuffBaseNode):
+     
+    def __init__(self, element , weight) -> None:
+        self._element = element
+        self._weight = weight
+    
+    def value(self):
+        return self._element
+    
+
+    def weight(self):
+        return self._weight
+    
+    def isLeaf():
+        return True
+    
+
+class HuffInternalNode(HuffBaseNode):
+     
+    def __init__(self , l , r , weight) -> None:
+        self._left = l
+        self._right = r
+        self._weight = weight
+    
+    def left(self):
+        return self._left
+    
+    def right(self):
+        return self._right
+    
+
+    def weight(self) -> int:
+        return self._weight
+    
+
+    def isLeaf(self) -> bool:
+        return False
+    
+
+class HuffTree():
+    
+    def __init__(self , element_or_node , weight = None):
+        if weight is not None:
+            self._root =HuffLeafNode(element = element_or_node, weight= weight)
+        else:
+            self._root = element_or_node
+    
+
+
+    def root(self):
+        return self._root
+    
+    def weight(self):
+        return self._root
+    
+
+    def __lt__(self, other):
+        return self._root.weight < other.weight()
+    
+
+
+    
+    
+
+    
+
+    
+
+    
+
+    
+
+
+        
 
 
 
@@ -42,6 +127,11 @@ if __name__ == "__main__":
     
     except NameError:
          print("Enter valid file name.")
+
+
+
+    
+
 
     print(char_count)
     
