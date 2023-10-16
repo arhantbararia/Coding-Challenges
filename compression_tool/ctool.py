@@ -1,5 +1,6 @@
 import sys
 import os
+import json
 
     
 class HuffBaseNode():
@@ -218,6 +219,16 @@ def buildTree(min_heap):
     return min_heap.remove_min() # return the final internal node
 
 
+def str_to_dict(string):
+    string = string.strip('{}')
+    pairs = string.split(', ')
+    
+    
+
+    
+    dict1 = {key[1:-1] : value for key , value in (pair.split(': ') for pair in pairs)}
+    
+    return dict1
 
 
 if __name__ == "__main__":
@@ -287,7 +298,7 @@ if __name__ == "__main__":
     # print("adding ('$' , 10)" )
     # min_heap.push('$' , 10)
 
-    print("heap created succesfully")
+    # print("heap created succesfully")
 
     final_internal_node = buildTree(min_heap)
 
@@ -299,12 +310,53 @@ if __name__ == "__main__":
     prefix_code_table = {}
 
     for element in char_count.keys():
-        prefix_code_table[element] = huffman_tree.return_huffman_code(element)
+        
+        #translating code to bits and then packing themm to bytes
+        code_binary_string = huffman_tree.return_huffman_code(element)
+        integer_value = int(code_binary_string ,2 )
+        num_bytes = (len(code_binary_string) + 7) // 8
+        code_byte = integer_value.to_bytes(num_bytes, byteorder='big')
+
+        #saving packed code to prefix_code_table
+        prefix_code_table[element] = code_byte
 
 
-    print(prefix_code_table)
+
+
+    # print(prefix_code_table)
+
+    with open('compressed.txt', 'w') as comp_file:
+        comp_file.write("HEADER \n")
+        comp_file.write("Character Count:\n")
+        comp_file.write(str(char_count))
+        comp_file.write("\nPrefix Code Table:\n")
+        comp_file.write(str(prefix_code_table))
+        comp_file.write("\nHEADER ENDS")
+
+    i = 1
+        
+    with open('compressed.txt' , 'r') as comp_file:
+        for line in comp_file:
+            
+            if(i == 3):
+                
+                string = str(line)[:len(line)-1]
+                
+                char_freq = str_to_dict(string)
+            
+            if(i == 5):
+                
+                string = str(line)[:len(line)-1]
+                
+                prefix_code_packed = str_to_dict(string)
+
+            i += 1
+            
+        
     
 
+    print(char_freq)
+    print(prefix_code_packed)
     # leaf_node = HuffLeafNode('a', 5)
     # internal_node = HuffInternalNode(leaf_node, HuffLeafNode('b', 3), 8)
     # huffman_tree = HuffTree(internal_node)
