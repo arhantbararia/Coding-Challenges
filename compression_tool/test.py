@@ -30,3 +30,4 @@ binary_string = bin(integer_value)[2:]  # [2:] is used to remove the '0b' prefix
 print("decompresed to: " , end = " ")
 print(binary_string)
 print("size of binary string:" , sys.getsizeof(binary_string))
+

@@ -1,6 +1,10 @@
 import sys
 import os
 import json
+from progress.bar import Bar
+
+
+
 
     
 class HuffBaseNode():
@@ -194,10 +198,6 @@ class MinHeap:
             self.heap[index] , self.heap[smallest] = self.heap[smallest] , self.heap[index]
             self._heapify_down(smallest)
 
-    
-    
-
-
 
     def heapsize(self):
         return len(self.heap)
@@ -245,14 +245,10 @@ if __name__ == "__main__":
        }
 
     arguementList = sys.argv[1:]
-
-    count_chars = False
+    total_char = 0
+    ## TO DO adding compression and decompression files
     for argument in arguementList:
         
-        
-        if argument in ("-m" , '--count_chars'):
-            count_chars = True
-
         if (argument[0] != '-') or (argument[0] != '-' and argument[1] != '-'):
                 file_name = argument
                 
@@ -261,6 +257,7 @@ if __name__ == "__main__":
             
                 for line in file:
                     for char in line:
+                        total_char += 1
                         if char not in char_count.keys():
                              char_count[char] = 1
                         else:
@@ -311,52 +308,85 @@ if __name__ == "__main__":
 
     for element in char_count.keys():
         
-        #translating code to bits and then packing themm to bytes
+        # translating code to bits and then packing themm to bytes
         code_binary_string = huffman_tree.return_huffman_code(element)
         integer_value = int(code_binary_string ,2 )
         num_bytes = (len(code_binary_string) + 7) // 8
         code_byte = integer_value.to_bytes(num_bytes, byteorder='big')
 
-        #saving packed code to prefix_code_table
-        prefix_code_table[element] = code_byte
+        # saving packed code to prefix_code_table
+        prefix_code_table[element] = code_byte  
 
-
+    print("prefix code table genereated!")
+    print(prefix_code_table)
 
 
     # print(prefix_code_table)
-
-    with open('compressed.txt', 'w') as comp_file:
-        comp_file.write("HEADER \n")
-        comp_file.write("Character Count:\n")
-        comp_file.write(str(char_count))
-        comp_file.write("\nPrefix Code Table:\n")
-        comp_file.write(str(prefix_code_table))
-        comp_file.write("\nHEADER ENDS")
-
+    complete_prefix_code = b''
+    #compressing wrt to prefix code table 
     i = 1
-        
-    with open('compressed.txt' , 'r') as comp_file:
-        for line in comp_file:
-            
-            if(i == 3):
-                
-                string = str(line)[:len(line)-1]
-                
-                char_freq = str_to_dict(string)
-            
-            if(i == 5):
-                
-                string = str(line)[:len(line)-1]
-                
-                prefix_code_packed = str_to_dict(string)
+    with open(file_name , 'r', encoding="UTF-8") as file:
+                    for line in file:
+                        print("line: ", i)
+                        for char in line:
+                            complete_prefix_code += prefix_code_table[char]
+                        i += 1
+                        
+                    
 
-            i += 1
+    
+    # # integer_value = int(complete_prefix_code , 2)
+    # # num_bytes = (len(complete_prefix_code) + 7) // 8
+    # # code_byte = integer_value.to_bytes(num_bytes, byteorder='big')
+
+    
+                    
+
+    # #output to compressed file.
+    # with open('compressed.txt', 'w') as comp_file:
+    #     comp_file.write("HEADER \n")
+    #     # comp_file.write("Character Count:\n")
+    #     # comp_file.write(str(char_count))
+    #     comp_file.write("Prefix Code Table:\n")
+    #     comp_file.write(str(prefix_code_table))
+    #     comp_file.write("\nTotal Characters: ")
+    #     comp_file.write(str(total_char))
+    #     comp_file.write("\nHEADER ENDS\n")
+    #     comp_file.write(str(complete_prefix_code))
+
+        
+                        
+
+
+
+    # i = 1
+        
+
+    #reading compressed file
+    # with open('compressed.txt' , 'r' ) as comp_file:
+    #     for line in comp_file:
+            
+    #         if(i == 3):
+                
+    #             string = str(line)[:len(line)-1]
+                
+    #             char_freq = str_to_dict(string)
+            
+    #         if(i == 5):
+                
+    #             string = str(line)[:len(line)-1]
+                
+    #             prefix_code_packed = str_to_dict(string)
+
+    #         i += 1
             
         
     
 
-    print(char_freq)
-    print(prefix_code_packed)
+    # print(char_freq)
+    # print(prefix_code_packed)
+    # print(prefix_code_packed["'"])
+
     # leaf_node = HuffLeafNode('a', 5)
     # internal_node = HuffInternalNode(leaf_node, HuffLeafNode('b', 3), 8)
     # huffman_tree = HuffTree(internal_node)
